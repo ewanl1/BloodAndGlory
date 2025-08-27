@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: a77f3b48d8883ba4786fb073121a9e3e
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 314514
+  packageName: Sword Animation
+  packageVersion: 1.0
+  assetPath: Assets/Sword Animation/Demo/Animator Controller/anim_attack_heavy_startupController.controller
+  uploadId: 742126

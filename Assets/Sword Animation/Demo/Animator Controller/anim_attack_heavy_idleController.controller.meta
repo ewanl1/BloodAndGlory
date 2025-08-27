@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 3a9b6ad856b95df46aecf8f096dd5773
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 314514
+  packageName: Sword Animation
+  packageVersion: 1.0
+  assetPath: Assets/Sword Animation/Demo/Animator Controller/anim_attack_heavy_idleController.controller
+  uploadId: 742126

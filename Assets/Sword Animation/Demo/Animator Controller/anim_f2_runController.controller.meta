@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 102efe5372b6ce344a653f133ba8d4a9
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 314514
+  packageName: Sword Animation
+  packageVersion: 1.0
+  assetPath: Assets/Sword Animation/Demo/Animator Controller/anim_f2_runController.controller
+  uploadId: 742126

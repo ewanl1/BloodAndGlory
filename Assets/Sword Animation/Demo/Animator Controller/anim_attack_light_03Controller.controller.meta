@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: ce2338b6e43e8ad4f8d6c03314eaa0db
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 314514
+  packageName: Sword Animation
+  packageVersion: 1.0
+  assetPath: Assets/Sword Animation/Demo/Animator Controller/anim_attack_light_03Controller.controller
+  uploadId: 742126

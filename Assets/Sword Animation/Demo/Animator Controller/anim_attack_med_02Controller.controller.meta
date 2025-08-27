@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b5be3af2b9cee45469adbcad1b68cce0
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 314514
+  packageName: Sword Animation
+  packageVersion: 1.0
+  assetPath: Assets/Sword Animation/Demo/Animator Controller/anim_attack_med_02Controller.controller
+  uploadId: 742126

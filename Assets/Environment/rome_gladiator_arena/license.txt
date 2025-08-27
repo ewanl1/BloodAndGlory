@@ -1,0 +1,11 @@
+Model Information:
+* title:	Rome: Gladiator Arena
+* source:	https://sketchfab.com/3d-models/rome-gladiator-arena-554186cb26634d5fb48f11b0d9b518d6
+* author:	Jody_Hong (https://sketchfab.com/jodyhong)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Rome: Gladiator Arena" (https://sketchfab.com/3d-models/rome-gladiator-arena-554186cb26634d5fb48f11b0d9b518d6) by Jody_Hong (https://sketchfab.com/jodyhong) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
