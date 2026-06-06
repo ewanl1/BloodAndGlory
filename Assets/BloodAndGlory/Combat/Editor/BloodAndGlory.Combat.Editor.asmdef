@@ -4,7 +4,8 @@
   "references": [
     "BloodAndGlory.Combat.Core",
     "BloodAndGlory.Combat.Runtime",
-    "Unity.AI.Navigation"
+    "Unity.AI.Navigation",
+    "Unity.XR.Interaction.Toolkit"
   ],
   "includePlatforms": [
     "Editor"
