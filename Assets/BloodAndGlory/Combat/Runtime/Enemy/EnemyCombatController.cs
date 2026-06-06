@@ -29,6 +29,12 @@ namespace BloodAndGlory.Combat.Runtime.Enemy
 
         private void Update()
         {
+            if (state == EnemyCombatState.Dead)
+            {
+                ApplyDeadState();
+                return;
+            }
+
             if (target == null || enemyProfile == null)
                 return;
 
@@ -50,13 +56,15 @@ namespace BloodAndGlory.Combat.Runtime.Enemy
         public void Kill()
         {
             EnterState(EnemyCombatState.Dead);
+            ApplyDeadState();
         }
 
         private void EnterState(EnemyCombatState next)
         {
             state = next;
             stateEnteredAt = Time.time;
-            animator.SetInteger("CombatState", (int)state);
+            if (animator != null)
+                animator.SetInteger("CombatState", (int)state);
         }
 
         private void ApplyState(EnemyProfileData profile)
@@ -79,16 +87,27 @@ namespace BloodAndGlory.Combat.Runtime.Enemy
                     animator.SetFloat("Speed", 0f);
                     break;
                 case EnemyCombatState.Dead:
-                    agent.isStopped = true;
-                    animator.SetFloat("Speed", 0f);
-                    animator.SetBool("Dead", true);
-                    enabled = false;
+                    ApplyDeadState();
                     break;
                 default:
                     agent.isStopped = true;
                     animator.SetFloat("Speed", 0f);
                     break;
             }
+        }
+
+        private void ApplyDeadState()
+        {
+            if (agent != null)
+                agent.isStopped = true;
+
+            if (animator != null)
+            {
+                animator.SetFloat("Speed", 0f);
+                animator.SetBool("Dead", true);
+            }
+
+            enabled = false;
         }
     }
 }
