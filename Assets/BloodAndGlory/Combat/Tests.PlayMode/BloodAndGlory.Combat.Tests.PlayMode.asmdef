@@ -1,0 +1,22 @@
+{
+  "name": "BloodAndGlory.Combat.Tests.PlayMode",
+  "rootNamespace": "BloodAndGlory.Combat.Tests.PlayMode",
+  "references": [
+    "BloodAndGlory.Combat.Core",
+    "BloodAndGlory.Combat.Runtime",
+    "UnityEngine.TestRunner"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": true,
+  "precompiledReferences": [
+    "nunit.framework.dll"
+  ],
+  "autoReferenced": false,
+  "defineConstraints": [
+    "UNITY_INCLUDE_TESTS"
+  ],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

@@ -1,0 +1,20 @@
+{
+  "name": "BloodAndGlory.Combat.Editor",
+  "rootNamespace": "BloodAndGlory.Combat.Editor",
+  "references": [
+    "BloodAndGlory.Combat.Core",
+    "BloodAndGlory.Combat.Runtime",
+    "Unity.AI.Navigation"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

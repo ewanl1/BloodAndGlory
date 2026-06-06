@@ -1,0 +1,19 @@
+{
+  "name": "BloodAndGlory.Combat.Runtime",
+  "rootNamespace": "BloodAndGlory.Combat.Runtime",
+  "references": [
+    "BloodAndGlory.Combat.Core",
+    "Unity.AI.Navigation",
+    "Unity.InputSystem",
+    "Unity.XR.Interaction.Toolkit"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}
