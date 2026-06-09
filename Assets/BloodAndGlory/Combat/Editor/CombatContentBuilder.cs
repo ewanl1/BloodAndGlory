@@ -106,8 +106,8 @@ namespace BloodAndGlory.Combat.Editor
             rigidbody.useGravity = true;
             rigidbody.isKinematic = false;
             rigidbody.mass = Mathf.Max(1.5f, rigidbody.mass);
-            rigidbody.drag = Mathf.Max(0.02f, rigidbody.drag);
-            rigidbody.angularDrag = Mathf.Max(0.05f, rigidbody.angularDrag);
+            rigidbody.linearDamping = Mathf.Max(0.02f, rigidbody.linearDamping);
+            rigidbody.angularDamping = Mathf.Max(0.05f, rigidbody.angularDamping);
 
             var grabInteractable = instance.GetComponent<XRGrabInteractable>();
             if (grabInteractable == null)
