@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Reflection;
+using BloodAndGlory.Combat.Runtime.Debug;
 using BloodAndGlory.Combat.Runtime.Training;
 using NUnit.Framework;
 using UnityEngine;
@@ -18,7 +19,11 @@ namespace BloodAndGlory.Combat.Tests.PlayMode
 
             Assert.AreEqual("CombatTrainingScene", scene.name);
             Assert.IsNotNull(GameObject.Find("Training Floor"));
-            Assert.IsNotNull(GameObject.Find("Combat Debug Overlay"));
+            var overlayObject = GameObject.Find("Combat Debug Overlay");
+            Assert.IsNotNull(overlayObject);
+            var overlay = overlayObject.GetComponent<CombatDebugOverlay>();
+            Assert.IsNotNull(overlay);
+            AssertSerializedReference(overlay, "worldText");
             var debugText = GameObject.Find("Combat Debug Text");
             Assert.IsNotNull(debugText);
             Assert.IsNotNull(debugText.GetComponent<TextMesh>());
@@ -40,11 +45,11 @@ namespace BloodAndGlory.Combat.Tests.PlayMode
             Assert.IsTrue(rigidbody.useGravity);
         }
 
-        private static void AssertSerializedReference(CombatTrainingRuntime runtime, string fieldName)
+        private static void AssertSerializedReference(object target, string fieldName)
         {
-            var field = typeof(CombatTrainingRuntime).GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic);
+            var field = target.GetType().GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.IsNotNull(field, $"Missing serialized field {fieldName}.");
-            Assert.IsNotNull(field.GetValue(runtime), $"{fieldName} is not wired.");
+            Assert.IsNotNull(field.GetValue(target), $"{fieldName} is not wired.");
         }
     }
 }
