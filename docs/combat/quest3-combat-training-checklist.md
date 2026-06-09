@@ -2,6 +2,15 @@
 
 Run this checklist on Quest 3 standalone after automated Edit Mode and Play Mode tests pass.
 
+## Preflight
+
+- Physics GameObject SDK is set to PhysX.
+- `CombatTrainingScene` uses `XR Combat Rig`.
+- Hands are visible in headset.
+- The broadsword uses gravity when released.
+- The peasant is not in T-pose.
+- The combat debug panel is visible from the player start area.
+
 ## Setup
 
 - Build target is Android.
@@ -44,3 +53,10 @@ Run this checklist on Quest 3 standalone after automated Edit Mode and Play Mode
 - Haptics are not noisy or constant.
 - Debug overlay does not obscure basic play.
 - No repeated console errors appear during the session.
+
+## Deferred By Spec
+
+- No Quest 2 validation.
+- No player HP or player death.
+- No lunge/root-motion attacks.
+- No dismemberment.
