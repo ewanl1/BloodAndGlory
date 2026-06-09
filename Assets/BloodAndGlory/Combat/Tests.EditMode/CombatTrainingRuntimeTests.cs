@@ -17,6 +17,23 @@ namespace BloodAndGlory.Combat.Tests.EditMode
         }
 
         [Test]
+        public void ResolvePlayerHitForTests_AppliesDamage()
+        {
+            var state = new CombatState(new HealthState(100));
+            var hit = new HitProposal(1, 10, "broadsword", HurtboxRegion.Head, 8f, 1f, false);
+
+            var result = CombatTrainingRuntime.ResolvePlayerHitForTests(
+                state,
+                hit,
+                WeaponProfileData.BroadswordDefaults,
+                new BlockContext(false, false));
+
+            Assert.Greater(result.Event.Damage, 1);
+            Assert.AreEqual(CombatEventType.Damaged, result.Event.Type);
+            Assert.Less(result.Health.CurrentHitPoints, state.Health.CurrentHitPoints);
+        }
+
+        [Test]
         public void ResolvePlayerHitForRuntimeTests_AcceptedHitUpdatesEnemyHealth()
         {
             var runtime = CreateRuntime(100);
