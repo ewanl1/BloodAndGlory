@@ -1,6 +1,7 @@
 using BloodAndGlory.Combat.Runtime.Authoring;
 using BloodAndGlory.Combat.Runtime.Debug;
 using BloodAndGlory.Combat.Runtime.Enemy;
+using BloodAndGlory.Combat.Runtime.Training;
 using BloodAndGlory.Combat.Runtime.Weapons;
 using Unity.AI.Navigation;
 using UnityEditor;
@@ -240,24 +241,26 @@ namespace BloodAndGlory.Combat.Editor
                 xrOrigin.transform.position = playerSpawn.transform.position;
             }
 
+            WeaponSweepDriver sweep = null;
             var weaponSource = AssetDatabase.LoadAssetAtPath<GameObject>(CombatBroadswordPath);
             if (weaponSource != null)
             {
                 var weapon = (GameObject)PrefabUtility.InstantiatePrefab(weaponSource);
                 weapon.name = "Player Broadsword";
                 weapon.transform.position = new Vector3(0.6f, 0.9f, -2.2f);
-                var sweep = weapon.GetComponent<WeaponSweepDriver>();
+                sweep = weapon.GetComponent<WeaponSweepDriver>();
                 var serializedSweep = new SerializedObject(sweep);
                 serializedSweep.FindProperty("attackerId").intValue = 1;
                 serializedSweep.FindProperty("weaponId").stringValue = weaponProfile.ToData().Id;
                 serializedSweep.ApplyModifiedPropertiesWithoutUndo();
             }
 
+            GameObject enemy = null;
             EnemyCombatController enemyController = null;
             var enemySource = AssetDatabase.LoadAssetAtPath<GameObject>(CombatPeasantPath);
             if (enemySource != null)
             {
-                var enemy = (GameObject)PrefabUtility.InstantiatePrefab(enemySource);
+                enemy = (GameObject)PrefabUtility.InstantiatePrefab(enemySource);
                 enemy.name = "PeasantBrown_Combat";
                 enemy.transform.position = enemySpawn.transform.position;
                 enemyController = enemy.GetComponent<EnemyCombatController>();
@@ -276,6 +279,16 @@ namespace BloodAndGlory.Combat.Editor
                 serializedOverlay.FindProperty("enemy").objectReferenceValue = enemyController;
                 serializedOverlay.ApplyModifiedPropertiesWithoutUndo();
             }
+
+            var runtime = new GameObject("Combat Training Runtime");
+            var trainingRuntime = runtime.AddComponent<CombatTrainingRuntime>();
+            var serializedRuntime = new SerializedObject(trainingRuntime);
+            serializedRuntime.FindProperty("playerSword").objectReferenceValue = sweep;
+            serializedRuntime.FindProperty("playerSwordProfile").objectReferenceValue = weaponProfile;
+            serializedRuntime.FindProperty("enemyCombatant").objectReferenceValue = enemy == null ? null : enemy.GetComponent<CombatantAuthoring>();
+            serializedRuntime.FindProperty("enemyController").objectReferenceValue = enemyController;
+            serializedRuntime.FindProperty("debugOverlay").objectReferenceValue = overlay;
+            serializedRuntime.ApplyModifiedPropertiesWithoutUndo();
 
             EditorSceneManager.SaveScene(scene, TrainingScenePath);
             AddTrainingSceneToBuildSettings();

@@ -17,6 +17,7 @@ namespace BloodAndGlory.Combat.Tests.PlayMode
             Assert.AreEqual("CombatTrainingScene", scene.name);
             Assert.IsNotNull(GameObject.Find("Training Floor"));
             Assert.IsNotNull(GameObject.Find("Combat Debug Overlay"));
+            Assert.IsNotNull(GameObject.Find("Combat Training Runtime"));
             Assert.IsNotNull(GameObject.Find("XR Combat Rig"));
 
             var sword = GameObject.Find("Player Broadsword");

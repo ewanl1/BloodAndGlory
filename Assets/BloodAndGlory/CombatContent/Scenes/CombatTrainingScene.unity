@@ -222,6 +222,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2d3702c58c30e49269b2b0134459a2b5, type: 3}
+--- !u!114 &650321004 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1985034244983941816, guid: 2d3702c58c30e49269b2b0134459a2b5, type: 3}
+  m_PrefabInstance: {fileID: 355383755}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65f06e0cade147caa263ffc0ab345d0d, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: BloodAndGlory.Combat.Runtime::BloodAndGlory.Combat.Runtime.Weapons.WeaponSweepDriver
 --- !u!1 &599464745
 GameObject:
   m_ObjectHideFlags: 0
@@ -470,6 +481,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfac7668db9649abb8d5305998d051de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: BloodAndGlory.Combat.Runtime::BloodAndGlory.Combat.Runtime.Enemy.EnemyCombatController
+--- !u!114 &650321005 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9032180587462771136, guid: 48e94074be72c449f80d2462976b4a1e, type: 3}
+  m_PrefabInstance: {fileID: 1345438374}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b5ef6894a8248afbc098eb5377b118d, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: BloodAndGlory.Combat.Runtime::BloodAndGlory.Combat.Runtime.Authoring.CombatantAuthoring
 --- !u!1 &1483814295
 GameObject:
   m_ObjectHideFlags: 0
@@ -496,6 +518,55 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.1, z: 2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &650321000
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 650321002}
+  - component: {fileID: 650321001}
+  m_Layer: 0
+  m_Name: Combat Training Runtime
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &650321001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 650321000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dd6eeb77ef04b32a8979ca9f8dcf9f1, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: BloodAndGlory.Combat.Runtime::BloodAndGlory.Combat.Runtime.Training.CombatTrainingRuntime
+  playerSword: {fileID: 650321004}
+  playerSwordProfile: {fileID: 11400000, guid: ece40e702ba32497eb88046accb9732e, type: 2}
+  enemyCombatant: {fileID: 650321005}
+  enemyController: {fileID: 1345438375}
+  debugOverlay: {fileID: 109830931}
+--- !u!4 &650321002
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 650321000}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -759,3 +830,4 @@ SceneRoots:
   - {fileID: 1345438374}
   - {fileID: 109830932}
   - {fileID: 2035843844}
+  - {fileID: 650321002}
