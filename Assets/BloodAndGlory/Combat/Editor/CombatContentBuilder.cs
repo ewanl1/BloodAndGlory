@@ -273,12 +273,22 @@ namespace BloodAndGlory.Combat.Editor
 
             var debug = new GameObject("Combat Debug Overlay");
             var overlay = debug.AddComponent<CombatDebugOverlay>();
-            if (enemyController != null)
-            {
-                var serializedOverlay = new SerializedObject(overlay);
-                serializedOverlay.FindProperty("enemy").objectReferenceValue = enemyController;
-                serializedOverlay.ApplyModifiedPropertiesWithoutUndo();
-            }
+            var textObject = new GameObject("Combat Debug Text");
+            textObject.transform.SetParent(debug.transform, false);
+            textObject.transform.localPosition = new Vector3(-2.2f, 1.8f, 1.6f);
+            textObject.transform.localRotation = Quaternion.Euler(0f, 35f, 0f);
+            textObject.transform.localScale = Vector3.one * 0.08f;
+
+            var textMesh = textObject.AddComponent<TextMesh>();
+            textMesh.anchor = TextAnchor.UpperLeft;
+            textMesh.alignment = TextAlignment.Left;
+            textMesh.fontSize = 42;
+            textMesh.color = Color.black;
+
+            var serializedOverlay = new SerializedObject(overlay);
+            serializedOverlay.FindProperty("enemy").objectReferenceValue = enemyController;
+            serializedOverlay.FindProperty("worldText").objectReferenceValue = textMesh;
+            serializedOverlay.ApplyModifiedPropertiesWithoutUndo();
 
             var runtime = new GameObject("Combat Training Runtime");
             var trainingRuntime = runtime.AddComponent<CombatTrainingRuntime>();

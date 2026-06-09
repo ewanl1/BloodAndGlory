@@ -19,6 +19,9 @@ namespace BloodAndGlory.Combat.Tests.PlayMode
             Assert.AreEqual("CombatTrainingScene", scene.name);
             Assert.IsNotNull(GameObject.Find("Training Floor"));
             Assert.IsNotNull(GameObject.Find("Combat Debug Overlay"));
+            var debugText = GameObject.Find("Combat Debug Text");
+            Assert.IsNotNull(debugText);
+            Assert.IsNotNull(debugText.GetComponent<TextMesh>());
             var runtimeObject = GameObject.Find("Combat Training Runtime");
             Assert.IsNotNull(runtimeObject);
             var runtime = runtimeObject.GetComponent<CombatTrainingRuntime>();

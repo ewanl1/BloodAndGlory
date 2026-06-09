@@ -8,6 +8,7 @@ namespace BloodAndGlory.Combat.Runtime.Debug
     {
         [SerializeField] private EnemyCombatController enemy;
         [SerializeField] private bool visible = true;
+        [SerializeField] private TextMesh worldText;
 
         private CombatEvent? lastEvent;
         private float lastVelocity;
@@ -20,30 +21,36 @@ namespace BloodAndGlory.Combat.Runtime.Debug
             duplicateStatus = duplicateSuppressed ? "Suppressed" : "Accepted";
         }
 
+        private string BuildText()
+        {
+            var eventName = lastEvent.HasValue ? lastEvent.Value.Type.ToString() : "None";
+            var region = lastEvent.HasValue ? lastEvent.Value.Region.ToString() : "None";
+            var damage = lastEvent.HasValue ? lastEvent.Value.Damage.ToString() : "0";
+
+            return
+                "Blood and Glory Combat Debug\n" +
+                $"Enemy State: {(enemy == null ? "None" : enemy.State.ToString())}\n" +
+                $"Last Velocity: {lastVelocity:0.00}\n" +
+                $"Duplicate: {duplicateStatus}\n" +
+                $"Event: {eventName}\n" +
+                $"Region: {region}\n" +
+                $"Damage: {damage}";
+        }
+
+        private void LateUpdate()
+        {
+            if (worldText != null)
+                worldText.text = BuildText();
+        }
+
         private void OnGUI()
         {
             if (!visible)
                 return;
 
             GUILayout.BeginArea(new Rect(16, 16, 360, 240), GUI.skin.box);
-            GUILayout.Label("Blood and Glory Combat Debug");
-            GUILayout.Label($"Enemy State: {(enemy == null ? "None" : enemy.State.ToString())}");
-            GUILayout.Label($"Last Velocity: {lastVelocity:0.00}");
-            GUILayout.Label($"Duplicate: {duplicateStatus}");
-
-            if (lastEvent.HasValue)
-            {
-                var combatEvent = lastEvent.Value;
-                GUILayout.Label($"Event: {combatEvent.Type}");
-                GUILayout.Label($"Region: {combatEvent.Region}");
-                GUILayout.Label($"Damage: {combatEvent.Damage}");
-            }
-            else
-            {
-                GUILayout.Label("Event: None");
-                GUILayout.Label("Region: None");
-                GUILayout.Label("Damage: 0");
-            }
+            foreach (var line in BuildText().Split('\n'))
+                GUILayout.Label(line);
 
             GUILayout.EndArea();
         }
