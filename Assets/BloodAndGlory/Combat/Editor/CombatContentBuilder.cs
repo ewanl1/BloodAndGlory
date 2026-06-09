@@ -19,6 +19,7 @@ namespace BloodAndGlory.Combat.Editor
         private const string TrainingScenePath = Root + "/Scenes/CombatTrainingScene.unity";
         private const string SourceBroadswordPath = "Assets/SyntyStudios/PolygonKnights/Prefabs/Weapons/SM_Wep_Broadsword_01.prefab";
         private const string SourcePeasantPath = "Assets/SyntyStudios/PolygonAdventure/Prefabs/Characters/Character_Peasant_Brown.prefab";
+        private const string SourcePeasantAnimatorControllerPath = "Assets/SyntyStudios/PolygonAdventure/Models/Characters/Character.controller";
         private const string SourceXrOriginPath = Root + "/XR Combat Rig.prefab";
         private const string CombatBroadswordPath = Root + "/Prefabs/Weapons/Broadsword_Combat.prefab";
         private const string CombatPeasantPath = Root + "/Prefabs/Enemies/PeasantBrown_Combat.prefab";
@@ -172,6 +173,18 @@ namespace BloodAndGlory.Combat.Editor
 
             var instance = (GameObject)PrefabUtility.InstantiatePrefab(source);
             instance.name = "PeasantBrown_Combat";
+
+            var animator = instance.GetComponent<Animator>();
+            if (animator != null)
+            {
+                animator.applyRootMotion = false;
+                if (animator.runtimeAnimatorController == null)
+                {
+                    var controller = AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(SourcePeasantAnimatorControllerPath);
+                    if (controller != null)
+                        animator.runtimeAnimatorController = controller;
+                }
+            }
 
             var combatant = instance.GetComponent<CombatantAuthoring>();
             if (combatant == null)

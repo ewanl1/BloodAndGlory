@@ -43,6 +43,13 @@ namespace BloodAndGlory.Combat.Editor
                 return new ValidationResult(true, "Broadsword_Combat is valid.");
             }
 
+            if (root.name == "PeasantBrown_Combat")
+            {
+                var animator = root.GetComponent<Animator>();
+                if (animator == null || animator.runtimeAnimatorController == null)
+                    return new ValidationResult(false, "PeasantBrown_Combat must have an Animator with a runtime controller.");
+            }
+
             var combatant = root.GetComponentInChildren<CombatantAuthoring>();
             if (combatant == null)
                 return new ValidationResult(false, "CombatantAuthoring is required.");
