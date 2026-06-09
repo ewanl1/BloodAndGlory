@@ -18,7 +18,7 @@ namespace BloodAndGlory.Combat.Editor
         private const string TrainingScenePath = Root + "/Scenes/CombatTrainingScene.unity";
         private const string SourceBroadswordPath = "Assets/SyntyStudios/PolygonKnights/Prefabs/Weapons/SM_Wep_Broadsword_01.prefab";
         private const string SourcePeasantPath = "Assets/SyntyStudios/PolygonAdventure/Prefabs/Characters/Character_Peasant_Brown.prefab";
-        private const string SourceXrOriginPath = "Assets/Samples/XR Interaction Toolkit/3.4.1/Starter Assets/Prefabs/XR Origin (XR Rig).prefab";
+        private const string SourceXrOriginPath = Root + "/XR Combat Rig.prefab";
         private const string CombatBroadswordPath = Root + "/Prefabs/Weapons/Broadsword_Combat.prefab";
         private const string CombatPeasantPath = Root + "/Prefabs/Enemies/PeasantBrown_Combat.prefab";
 
@@ -94,18 +94,39 @@ namespace BloodAndGlory.Combat.Editor
             if (source == null)
                 throw new System.IO.FileNotFoundException("Broadsword source prefab missing.", SourceBroadswordPath);
 
+            var existing = AssetDatabase.LoadAssetAtPath<GameObject>(CombatBroadswordPath);
+            var existingAttachPoint = existing == null ? null : FindChildRecursive(existing.transform, "AttachPoint");
             var instance = (GameObject)PrefabUtility.InstantiatePrefab(source);
             instance.name = "Broadsword_Combat";
 
-            if (instance.GetComponent<Rigidbody>() == null)
-            {
-                var rigidbody = instance.AddComponent<Rigidbody>();
-                rigidbody.useGravity = false;
-                rigidbody.isKinematic = false;
-            }
+            var rigidbody = instance.GetComponent<Rigidbody>();
+            if (rigidbody == null)
+                rigidbody = instance.AddComponent<Rigidbody>();
 
-            if (instance.GetComponent<XRGrabInteractable>() == null)
-                instance.AddComponent<XRGrabInteractable>();
+            rigidbody.useGravity = true;
+            rigidbody.isKinematic = false;
+            rigidbody.mass = Mathf.Max(1.5f, rigidbody.mass);
+            rigidbody.drag = Mathf.Max(0.02f, rigidbody.drag);
+            rigidbody.angularDrag = Mathf.Max(0.05f, rigidbody.angularDrag);
+
+            var grabInteractable = instance.GetComponent<XRGrabInteractable>();
+            if (grabInteractable == null)
+                grabInteractable = instance.AddComponent<XRGrabInteractable>();
+
+            if (existingAttachPoint != null && FindChildRecursive(instance.transform, existingAttachPoint.name) == null)
+            {
+                var attachPoint = new GameObject(existingAttachPoint.name);
+                attachPoint.transform.SetParent(instance.transform, false);
+                attachPoint.transform.localPosition = existingAttachPoint.localPosition;
+                attachPoint.transform.localRotation = existingAttachPoint.localRotation;
+                attachPoint.transform.localScale = existingAttachPoint.localScale;
+
+                var serializedGrab = new SerializedObject(grabInteractable);
+                var attachTransform = serializedGrab.FindProperty("m_AttachTransform");
+                if (attachTransform.objectReferenceValue == null)
+                    attachTransform.objectReferenceValue = attachPoint.transform;
+                serializedGrab.ApplyModifiedPropertiesWithoutUndo();
+            }
 
             var markerSet = instance.GetComponent<WeaponMarkerSet>();
             if (markerSet == null)
@@ -125,6 +146,21 @@ namespace BloodAndGlory.Combat.Editor
             AssetDatabase.DeleteAsset(CombatBroadswordPath);
             PrefabUtility.SaveAsPrefabAsset(instance, CombatBroadswordPath);
             Object.DestroyImmediate(instance);
+        }
+
+        private static Transform FindChildRecursive(Transform root, string name)
+        {
+            if (root.name == name)
+                return root;
+
+            foreach (Transform child in root)
+            {
+                var match = FindChildRecursive(child, name);
+                if (match != null)
+                    return match;
+            }
+
+            return null;
         }
 
         private static void CreatePeasantPrefab()
@@ -200,7 +236,7 @@ namespace BloodAndGlory.Combat.Editor
             if (xrOriginSource != null)
             {
                 var xrOrigin = (GameObject)PrefabUtility.InstantiatePrefab(xrOriginSource);
-                xrOrigin.name = "XR Origin (Combat Training)";
+                xrOrigin.name = "XR Combat Rig";
                 xrOrigin.transform.position = playerSpawn.transform.position;
             }
 

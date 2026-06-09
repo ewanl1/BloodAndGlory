@@ -146,7 +146,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 503db7c86d1c42c89e73470361bc7658, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: BloodAndGlory.Combat.Runtime::BloodAndGlory.Combat.Runtime.Debug.CombatDebugOverlay
   enemy: {fileID: 1345438375}
   visible: 1
@@ -252,7 +252,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshSurface
   m_SerializedVersion: 0
   m_AgentTypeID: 0
@@ -408,7 +408,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 206490795897696274, guid: 48e94074be72c449f80d2462976b4a1e, type: 3}
       propertyPath: target
-      value:
+      value: 
       objectReference: {fileID: 946941876}
     - target: {fileID: 1480494433443090293, guid: 48e94074be72c449f80d2462976b4a1e, type: 3}
       propertyPath: m_Name
@@ -468,7 +468,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dfac7668db9649abb8d5305998d051de, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: BloodAndGlory.Combat.Runtime::BloodAndGlory.Combat.Runtime.Enemy.EnemyCombatController
 --- !u!1 &1483814295
 GameObject:
@@ -512,6 +512,10 @@ PrefabInstance:
     - target: {fileID: 1717954561962503725, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
       propertyPath: m_Name
       value: XR Origin (Combat Training)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1717954561962503725, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1717954561962503726, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
       propertyPath: m_LocalPosition.x
@@ -558,6 +562,63 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
+--- !u!1001 &2035843844
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 9218413233148424716, guid: 345e0915b5f224108ad90b5767b4cb5c, type: 3}
+      propertyPath: m_Name
+      value: XR Combat Rig
+      objectReference: {fileID: 0}
+    - target: {fileID: 9218413233148424719, guid: 345e0915b5f224108ad90b5767b4cb5c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9218413233148424719, guid: 345e0915b5f224108ad90b5767b4cb5c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9218413233148424719, guid: 345e0915b5f224108ad90b5767b4cb5c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -3
+      objectReference: {fileID: 0}
+    - target: {fileID: 9218413233148424719, guid: 345e0915b5f224108ad90b5767b4cb5c, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9218413233148424719, guid: 345e0915b5f224108ad90b5767b4cb5c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9218413233148424719, guid: 345e0915b5f224108ad90b5767b4cb5c, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9218413233148424719, guid: 345e0915b5f224108ad90b5767b4cb5c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9218413233148424719, guid: 345e0915b5f224108ad90b5767b4cb5c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9218413233148424719, guid: 345e0915b5f224108ad90b5767b4cb5c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9218413233148424719, guid: 345e0915b5f224108ad90b5767b4cb5c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 345e0915b5f224108ad90b5767b4cb5c, type: 3}
 --- !u!1 &2054288390
 GameObject:
   m_ObjectHideFlags: 0
@@ -568,6 +629,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2054288392}
   - component: {fileID: 2054288391}
+  - component: {fileID: 2054288393}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -655,6 +717,35 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2054288393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2054288390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalLightData
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_CustomShadowLayers: 0
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
+  m_RenderingLayersMask:
+    serializedVersion: 0
+    m_Bits: 1
+  m_ShadowRenderingLayersMask:
+    serializedVersion: 0
+    m_Bits: 1
+  m_Version: 4
+  m_LightLayerMask: 1
+  m_ShadowLayerMask: 1
+  m_RenderingLayers: 1
+  m_ShadowRenderingLayers: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -667,3 +758,4 @@ SceneRoots:
   - {fileID: 355383755}
   - {fileID: 1345438374}
   - {fileID: 109830932}
+  - {fileID: 2035843844}
