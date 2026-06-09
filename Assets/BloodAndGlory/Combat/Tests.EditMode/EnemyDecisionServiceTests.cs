@@ -1,5 +1,9 @@
 using BloodAndGlory.Combat.Core;
+using BloodAndGlory.Combat.Runtime.Authoring;
+using BloodAndGlory.Combat.Runtime.Enemy;
 using NUnit.Framework;
+using UnityEngine;
+using UnityEngine.AI;
 
 namespace BloodAndGlory.Combat.Tests.EditMode
 {
@@ -49,6 +53,33 @@ namespace BloodAndGlory.Combat.Tests.EditMode
             var next = service.Decide(EnemyCombatState.AttackCommit, profile, distanceToTarget: 1.2f, timeInState: 0.8f, randomValue: 0.5f);
 
             Assert.AreEqual(EnemyCombatState.Recover, next);
+        }
+
+        [Test]
+        public void CreateAttackProposalForTests_TargetsPlayerWithBroadsword()
+        {
+            var enemy = new GameObject("enemy");
+            try
+            {
+                enemy.AddComponent<CombatantAuthoring>().ConfigureForTests(12, isPlayer: false, maxHitPoints: 100);
+                enemy.AddComponent<NavMeshAgent>();
+                enemy.AddComponent<Animator>();
+                var controller = enemy.AddComponent<EnemyCombatController>();
+
+                var hit = controller.CreateAttackProposalForTests(3f);
+
+                Assert.AreEqual(12, hit.AttackerId);
+                Assert.AreEqual(1, hit.DefenderId);
+                Assert.AreEqual("broadsword", hit.WeaponId);
+                Assert.AreEqual(HurtboxRegion.Torso, hit.Region);
+                Assert.AreEqual(4f, hit.ImpactVelocity);
+                Assert.AreEqual(3f, hit.TimeSeconds);
+                Assert.IsTrue(hit.DefenderIsPlayer);
+            }
+            finally
+            {
+                Object.DestroyImmediate(enemy);
+            }
         }
     }
 }

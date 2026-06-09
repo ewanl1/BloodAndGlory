@@ -1,3 +1,4 @@
+using System;
 using BloodAndGlory.Combat.Core;
 using BloodAndGlory.Combat.Runtime.Authoring;
 using UnityEngine;
@@ -15,15 +16,21 @@ namespace BloodAndGlory.Combat.Runtime.Enemy
         private readonly EnemyDecisionService decisionService = new EnemyDecisionService();
         private NavMeshAgent agent;
         private Animator animator;
+        private CombatantAuthoring combatant;
         private EnemyCombatState state = EnemyCombatState.Idle;
         private float stateEnteredAt;
+        private bool attackProposalSent;
 
         public EnemyCombatState State => state;
+        public bool IsAttackActive => state == EnemyCombatState.AttackCommit;
+        public float TimeInState => Time.time - stateEnteredAt;
+        public event Action<HitProposal> AttackProposed;
 
         private void Awake()
         {
             agent = GetComponent<NavMeshAgent>();
             animator = GetComponent<Animator>();
+            combatant = GetComponent<CombatantAuthoring>();
             agent.updateRotation = true;
         }
 
@@ -53,6 +60,11 @@ namespace BloodAndGlory.Combat.Runtime.Enemy
             enemyProfile = profile;
         }
 
+        public HitProposal CreateAttackProposalForTests(float timeSeconds)
+        {
+            return CreateAttackProposal(timeSeconds);
+        }
+
         public void Kill()
         {
             EnterState(EnemyCombatState.Dead);
@@ -63,6 +75,7 @@ namespace BloodAndGlory.Combat.Runtime.Enemy
         {
             state = next;
             stateEnteredAt = Time.time;
+            attackProposalSent = state != EnemyCombatState.AttackCommit;
             if (animator != null)
                 animator.SetInteger("CombatState", (int)state);
         }
@@ -78,13 +91,17 @@ namespace BloodAndGlory.Combat.Runtime.Enemy
                     animator.SetFloat("Speed", agent.velocity.magnitude);
                     break;
                 case EnemyCombatState.Telegraph:
-                case EnemyCombatState.AttackCommit:
                 case EnemyCombatState.Recover:
                 case EnemyCombatState.Block:
                 case EnemyCombatState.Parry:
                 case EnemyCombatState.Stagger:
                     agent.isStopped = true;
                     animator.SetFloat("Speed", 0f);
+                    break;
+                case EnemyCombatState.AttackCommit:
+                    agent.isStopped = true;
+                    animator.SetFloat("Speed", 0f);
+                    TryProposeAttack();
                     break;
                 case EnemyCombatState.Dead:
                     ApplyDeadState();
@@ -94,6 +111,36 @@ namespace BloodAndGlory.Combat.Runtime.Enemy
                     animator.SetFloat("Speed", 0f);
                     break;
             }
+        }
+
+        private void TryProposeAttack()
+        {
+            if (attackProposalSent)
+                return;
+
+            if (attackDefinition != null)
+            {
+                var attack = attackDefinition.ToData();
+                if (!attack.IsActive(Time.time - stateEnteredAt))
+                    return;
+            }
+
+            attackProposalSent = true;
+            AttackProposed?.Invoke(CreateAttackProposal(Time.time));
+        }
+
+        private HitProposal CreateAttackProposal(float timeSeconds)
+        {
+            var authoring = combatant == null ? GetComponent<CombatantAuthoring>() : combatant;
+            var attackerId = authoring == null ? 10 : authoring.CombatantId;
+            return new HitProposal(
+                attackerId,
+                1,
+                "broadsword",
+                HurtboxRegion.Torso,
+                4f,
+                timeSeconds,
+                true);
         }
 
         private void ApplyDeadState()

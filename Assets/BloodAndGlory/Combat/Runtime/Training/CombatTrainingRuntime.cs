@@ -14,6 +14,8 @@ namespace BloodAndGlory.Combat.Runtime.Training
         [SerializeField] private CombatantAuthoring enemyCombatant;
         [SerializeField] private EnemyCombatController enemyController;
         [SerializeField] private CombatDebugOverlay debugOverlay;
+        [SerializeField] private float playerBlockDotThreshold = 0.45f;
+        [SerializeField] private float playerBlockDistance = 1.25f;
 
         private readonly CombatResolver resolver = new CombatResolver();
         private CombatState combatState;
@@ -31,15 +33,36 @@ namespace BloodAndGlory.Combat.Runtime.Training
 
             if (playerSword != null)
                 playerSword.HitProposed += OnPlayerHitProposed;
+
+            if (enemyController != null)
+                enemyController.AttackProposed += OnEnemyAttackProposed;
         }
 
         private void OnDisable()
         {
             if (playerSword != null)
                 playerSword.HitProposed -= OnPlayerHitProposed;
+
+            if (enemyController != null)
+                enemyController.AttackProposed -= OnEnemyAttackProposed;
+        }
+
+        private void Update()
+        {
+            if (enemyController != null)
+                debugOverlay?.SetActiveAttack(enemyController.IsAttackActive ? "Peasant Broadsword" : "None");
         }
 
         public static DamageResult ResolvePlayerHitForTests(
+            CombatState state,
+            HitProposal hit,
+            WeaponProfileData profile,
+            BlockContext block)
+        {
+            return new CombatResolver().ResolveHit(state, hit, profile, block);
+        }
+
+        public static DamageResult ResolveEnemyHitForTests(
             CombatState state,
             HitProposal hit,
             WeaponProfileData profile,
@@ -63,9 +86,30 @@ namespace BloodAndGlory.Combat.Runtime.Training
             return ResolvePlayerHit(hit, block);
         }
 
+        public DamageResult ResolveEnemyHitForRuntimeTests(HitProposal hit, BlockContext block)
+        {
+            return ResolveEnemyHit(hit, block);
+        }
+
         private void OnPlayerHitProposed(HitProposal hit)
         {
             ResolvePlayerHit(hit, new BlockContext(false, false));
+        }
+
+        private void OnEnemyAttackProposed(HitProposal hit)
+        {
+            ResolveEnemyHit(hit, GetPlayerBlockContext());
+        }
+
+        private DamageResult ResolveEnemyHit(HitProposal hit, BlockContext block)
+        {
+            if (!hasTestProfile && playerSwordProfile == null)
+                return default;
+
+            var profile = hasTestProfile ? testProfile : playerSwordProfile.ToData();
+            var result = resolver.ResolveHit(new CombatState(new HealthState(100)), hit, profile, block);
+            debugOverlay?.RecordEvent(result.Event, result.Event.Type == CombatEventType.SuppressedDuplicate);
+            return result;
         }
 
         private DamageResult ResolvePlayerHit(HitProposal hit, BlockContext block)
@@ -89,6 +133,28 @@ namespace BloodAndGlory.Combat.Runtime.Training
             }
 
             return result;
+        }
+
+        private BlockContext GetPlayerBlockContext()
+        {
+            if (playerSword == null || enemyController == null)
+                return new BlockContext(false, false);
+
+            var swordPosition = playerSword.transform.position;
+            var enemyPosition = enemyController.transform.position;
+            if (Vector3.Distance(swordPosition, enemyPosition) > playerBlockDistance)
+                return new BlockContext(false, false);
+
+            var cameraTransform = Camera.main == null ? null : Camera.main.transform;
+            var playerPosition = cameraTransform == null ? swordPosition : cameraTransform.position;
+            var enemyToPlayer = playerPosition - enemyPosition;
+            var enemyToSword = swordPosition - enemyPosition;
+
+            if (enemyToPlayer.sqrMagnitude <= 0.0001f || enemyToSword.sqrMagnitude <= 0.0001f)
+                return new BlockContext(false, false);
+
+            var dot = Vector3.Dot(enemyToPlayer.normalized, enemyToSword.normalized);
+            return new BlockContext(dot >= playerBlockDotThreshold, false);
         }
     }
 }

@@ -34,6 +34,53 @@ namespace BloodAndGlory.Combat.Tests.EditMode
         }
 
         [Test]
+        public void ResolveEnemyHitForTests_PlayerDefenderProducesWouldHitPlayer()
+        {
+            var state = new CombatState(new HealthState(100));
+            var hit = new HitProposal(10, 1, "broadsword", HurtboxRegion.Torso, 4f, 1f, true);
+
+            var result = CombatTrainingRuntime.ResolveEnemyHitForTests(
+                state,
+                hit,
+                WeaponProfileData.BroadswordDefaults,
+                new BlockContext(false, false));
+
+            Assert.AreEqual(CombatEventType.WouldHitPlayer, result.Event.Type);
+            Assert.AreEqual(0, result.Event.Damage);
+        }
+
+        [Test]
+        public void ResolveEnemyHitForTests_PlayerBlockProducesBlocked()
+        {
+            var state = new CombatState(new HealthState(100));
+            var hit = new HitProposal(10, 1, "broadsword", HurtboxRegion.Torso, 4f, 1f, true);
+
+            var result = CombatTrainingRuntime.ResolveEnemyHitForTests(
+                state,
+                hit,
+                WeaponProfileData.BroadswordDefaults,
+                new BlockContext(isBlocking: true, isParryWindowActive: false));
+
+            Assert.AreEqual(CombatEventType.Blocked, result.Event.Type);
+            Assert.AreEqual(0, result.Event.Damage);
+        }
+
+        [Test]
+        public void ResolveEnemyHitForRuntimeTests_RecordsPlayerDamageDeferralEvents()
+        {
+            var runtime = CreateRuntime(100);
+            var hit = new HitProposal(10, 1, "broadsword", HurtboxRegion.Torso, 4f, 1f, true);
+
+            var wouldHit = runtime.ResolveEnemyHitForRuntimeTests(hit, new BlockContext(false, false));
+            var blocked = runtime.ResolveEnemyHitForRuntimeTests(hit, new BlockContext(isBlocking: true, isParryWindowActive: false));
+
+            Assert.AreEqual(CombatEventType.WouldHitPlayer, wouldHit.Event.Type);
+            Assert.AreEqual(CombatEventType.Blocked, blocked.Event.Type);
+            Assert.AreEqual(0, wouldHit.Event.Damage);
+            Assert.AreEqual(0, blocked.Event.Damage);
+        }
+
+        [Test]
         public void ResolvePlayerHitForRuntimeTests_AcceptedHitUpdatesEnemyHealth()
         {
             var runtime = CreateRuntime(100);

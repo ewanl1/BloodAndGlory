@@ -9,6 +9,7 @@ namespace BloodAndGlory.Combat.Runtime.Debug
         [SerializeField] private EnemyCombatController enemy;
         [SerializeField] private bool visible = true;
         [SerializeField] private TextMesh worldText;
+        [SerializeField] private string activeAttack = "None";
 
         private CombatEvent? lastEvent;
         private float lastVelocity;
@@ -21,6 +22,11 @@ namespace BloodAndGlory.Combat.Runtime.Debug
             duplicateStatus = duplicateSuppressed ? "Suppressed" : "Accepted";
         }
 
+        public void SetActiveAttack(string value)
+        {
+            activeAttack = string.IsNullOrWhiteSpace(value) ? "None" : value;
+        }
+
         private string BuildText()
         {
             var eventName = lastEvent.HasValue ? lastEvent.Value.Type.ToString() : "None";
@@ -30,6 +36,7 @@ namespace BloodAndGlory.Combat.Runtime.Debug
             return
                 "Blood and Glory Combat Debug\n" +
                 $"Enemy State: {(enemy == null ? "None" : enemy.State.ToString())}\n" +
+                $"Active Attack: {activeAttack}\n" +
                 $"Last Velocity: {lastVelocity:0.00}\n" +
                 $"Duplicate: {duplicateStatus}\n" +
                 $"Event: {eventName}\n" +
