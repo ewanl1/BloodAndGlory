@@ -1,4 +1,3 @@
-using System;
 using BloodAndGlory.Combat.Core;
 using BloodAndGlory.Combat.Runtime.Authoring;
 using UnityEngine;
@@ -24,7 +23,7 @@ namespace BloodAndGlory.Combat.Runtime.Enemy
         public EnemyCombatState State => state;
         public bool IsAttackActive => state == EnemyCombatState.AttackCommit;
         public float TimeInState => Time.time - stateEnteredAt;
-        public event Action<HitProposal> AttackProposed;
+        public event System.Action<HitProposal> AttackProposed;
 
         private void Awake()
         {
