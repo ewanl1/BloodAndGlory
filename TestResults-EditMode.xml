@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="12" result="Passed" total="12" passed="12" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-06-06 22:47:14Z" end-time="2026-06-06 22:47:15Z" duration="0.2478749">
+  <test-suite type="TestSuite" id="1000" name="Blood &amp; Glory" fullname="Blood &amp; Glory" runstate="Runnable" testcasecount="12" result="Passed" start-time="2026-06-06 22:47:14Z" end-time="2026-06-06 22:47:15Z" duration="0.247875" total="12" passed="12" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1016" name="BloodAndGlory.Combat.Tests.EditMode.dll" fullname="/Users/ewanlynch/Documents/GitHub/BloodAndGlory/Library/ScriptAssemblies/BloodAndGlory.Combat.Tests.EditMode.dll" runstate="Runnable" testcasecount="12" result="Passed" start-time="2026-06-06 22:47:14Z" end-time="2026-06-06 22:47:15Z" duration="0.190428" total="12" passed="12" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="75959" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1017" name="BloodAndGlory" fullname="BloodAndGlory" runstate="Runnable" testcasecount="12" result="Passed" start-time="2026-06-06 22:47:14Z" end-time="2026-06-06 22:47:15Z" duration="0.189362" total="12" passed="12" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1018" name="Combat" fullname="BloodAndGlory.Combat" runstate="Runnable" testcasecount="12" result="Passed" start-time="2026-06-06 22:47:14Z" end-time="2026-06-06 22:47:15Z" duration="0.188919" total="12" passed="12" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1019" name="Tests" fullname="BloodAndGlory.Combat.Tests" runstate="Runnable" testcasecount="12" result="Passed" start-time="2026-06-06 22:47:14Z" end-time="2026-06-06 22:47:15Z" duration="0.188381" total="12" passed="12" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestSuite" id="1020" name="EditMode" fullname="BloodAndGlory.Combat.Tests.EditMode" runstate="Runnable" testcasecount="12" result="Passed" start-time="2026-06-06 22:47:14Z" end-time="2026-06-06 22:47:15Z" duration="0.187712" total="12" passed="12" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="TestFixture" id="1001" name="CombatPrefabValidatorTests" fullname="BloodAndGlory.Combat.Tests.EditMode.CombatPrefabValidatorTests" classname="BloodAndGlory.Combat.Tests.EditMode.CombatPrefabValidatorTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-06-06 22:47:14Z" end-time="2026-06-06 22:47:14Z" duration="0.086421" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1002" name="ValidateCombatantWithoutHurtboxes_Fails" fullname="BloodAndGlory.Combat.Tests.EditMode.CombatPrefabValidatorTests.ValidateCombatantWithoutHurtboxes_Fails" methodname="ValidateCombatantWithoutHurtboxes_Fails" classname="BloodAndGlory.Combat.Tests.EditMode.CombatPrefabValidatorTests" runstate="Runnable" seed="1595601275" result="Passed" start-time="2026-06-06 22:47:14Z" end-time="2026-06-06 22:47:14Z" duration="0.030360" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1003" name="CombatResolverTests" fullname="BloodAndGlory.Combat.Tests.EditMode.CombatResolverTests" classname="BloodAndGlory.Combat.Tests.EditMode.CombatResolverTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-06-06 22:47:14Z" end-time="2026-06-06 22:47:15Z" duration="0.072261" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1004" name="HealthState_ClampsDamageAndMarksDead" fullname="BloodAndGlory.Combat.Tests.EditMode.CombatResolverTests.HealthState_ClampsDamageAndMarksDead" methodname="HealthState_ClampsDamageAndMarksDead" classname="BloodAndGlory.Combat.Tests.EditMode.CombatResolverTests" runstate="Runnable" seed="2053861345" result="Passed" start-time="2026-06-06 22:47:14Z" end-time="2026-06-06 22:47:15Z" duration="0.008004" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1005" name="ResolveHit_AppliesVelocityScaledRegionDamage" fullname="BloodAndGlory.Combat.Tests.EditMode.CombatResolverTests.ResolveHit_AppliesVelocityScaledRegionDamage" methodname="ResolveHit_AppliesVelocityScaledRegionDamage" classname="BloodAndGlory.Combat.Tests.EditMode.CombatResolverTests" runstate="Runnable" seed="986818778" result="Passed" start-time="2026-06-06 22:47:15Z" end-time="2026-06-06 22:47:15Z" duration="0.052970" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1009" name="ResolveHit_BlockPreventsDamage" fullname="BloodAndGlory.Combat.Tests.EditMode.CombatResolverTests.ResolveHit_BlockPreventsDamage" methodname="ResolveHit_BlockPreventsDamage" classname="BloodAndGlory.Combat.Tests.EditMode.CombatResolverTests" runstate="Runnable" seed="362193479" result="Passed" start-time="2026-06-06 22:47:15Z" end-time="2026-06-06 22:47:15Z" duration="0.001201" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1008" name="ResolveHit_ParryBeatsBlockAndPreventsDamage" fullname="BloodAndGlory.Combat.Tests.EditMode.CombatResolverTests.ResolveHit_ParryBeatsBlockAndPreventsDamage" methodname="ResolveHit_ParryBeatsBlockAndPreventsDamage" classname="BloodAndGlory.Combat.Tests.EditMode.CombatResolverTests" runstate="Runnable" seed="355897757" result="Passed" start-time="2026-06-06 22:47:15Z" end-time="2026-06-06 22:47:15Z" duration="0.000672" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1010" name="ResolveHit_PlayerDefenderProducesWouldHitPlayer" fullname="BloodAndGlory.Combat.Tests.EditMode.CombatResolverTests.ResolveHit_PlayerDefenderProducesWouldHitPlayer" methodname="ResolveHit_PlayerDefenderProducesWouldHitPlayer" classname="BloodAndGlory.Combat.Tests.EditMode.CombatResolverTests" runstate="Runnable" seed="376658604" result="Passed" start-time="2026-06-06 22:47:15Z" end-time="2026-06-06 22:47:15Z" duration="0.000480" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1006" name="ResolveHit_ProducesMinimumChipDamageForLowVelocity" fullname="BloodAndGlory.Combat.Tests.EditMode.CombatResolverTests.ResolveHit_ProducesMinimumChipDamageForLowVelocity" methodname="ResolveHit_ProducesMinimumChipDamageForLowVelocity" classname="BloodAndGlory.Combat.Tests.EditMode.CombatResolverTests" runstate="Runnable" seed="1572887939" result="Passed" start-time="2026-06-06 22:47:15Z" end-time="2026-06-06 22:47:15Z" duration="0.000493" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1007" name="ResolveHit_SuppressesDuplicateWithinWindow" fullname="BloodAndGlory.Combat.Tests.EditMode.CombatResolverTests.ResolveHit_SuppressesDuplicateWithinWindow" methodname="ResolveHit_SuppressesDuplicateWithinWindow" classname="BloodAndGlory.Combat.Tests.EditMode.CombatResolverTests" runstate="Runnable" seed="495064979" result="Passed" start-time="2026-06-06 22:47:15Z" end-time="2026-06-06 22:47:15Z" duration="0.004100" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1011" name="EnemyDecisionServiceTests" fullname="BloodAndGlory.Combat.Tests.EditMode.EnemyDecisionServiceTests" classname="BloodAndGlory.Combat.Tests.EditMode.EnemyDecisionServiceTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-06-06 22:47:15Z" end-time="2026-06-06 22:47:15Z" duration="0.015066" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1012" name="Decide_ApproachesWhenOutOfRange" fullname="BloodAndGlory.Combat.Tests.EditMode.EnemyDecisionServiceTests.Decide_ApproachesWhenOutOfRange" methodname="Decide_ApproachesWhenOutOfRange" classname="BloodAndGlory.Combat.Tests.EditMode.EnemyDecisionServiceTests" runstate="Runnable" seed="291595085" result="Passed" start-time="2026-06-06 22:47:15Z" end-time="2026-06-06 22:47:15Z" duration="0.001463" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1013" name="Decide_TelegraphsWhenInsidePreferredRange" fullname="BloodAndGlory.Combat.Tests.EditMode.EnemyDecisionServiceTests.Decide_TelegraphsWhenInsidePreferredRange" methodname="Decide_TelegraphsWhenInsidePreferredRange" classname="BloodAndGlory.Combat.Tests.EditMode.EnemyDecisionServiceTests" runstate="Runnable" seed="962116193" result="Passed" start-time="2026-06-06 22:47:15Z" end-time="2026-06-06 22:47:15Z" duration="0.000265" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1015" name="Decide_TransitionsAttackCommitToRecoverAfterActiveWindow" fullname="BloodAndGlory.Combat.Tests.EditMode.EnemyDecisionServiceTests.Decide_TransitionsAttackCommitToRecoverAfterActiveWindow" methodname="Decide_TransitionsAttackCommitToRecoverAfterActiveWindow" classname="BloodAndGlory.Combat.Tests.EditMode.EnemyDecisionServiceTests" runstate="Runnable" seed="1616490943" result="Passed" start-time="2026-06-06 22:47:15Z" end-time="2026-06-06 22:47:15Z" duration="0.000233" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1014" name="Decide_WeakPeasantRarelyBlocks" fullname="BloodAndGlory.Combat.Tests.EditMode.EnemyDecisionServiceTests.Decide_WeakPeasantRarelyBlocks" methodname="Decide_WeakPeasantRarelyBlocks" classname="BloodAndGlory.Combat.Tests.EditMode.EnemyDecisionServiceTests" runstate="Runnable" seed="1560433474" result="Passed" start-time="2026-06-06 22:47:15Z" end-time="2026-06-06 22:47:15Z" duration="0.000304" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[Saving results to: /Users/ewanlynch/Library/Application Support/DefaultCompany/Blood & Glory/TestResults.xml
+Saving results to: /Users/ewanlynch/Library/Application Support/DefaultCompany/Blood & Glory/TestResults.xml
+]]></output>
+                </test-case>
+              </test-suite>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
