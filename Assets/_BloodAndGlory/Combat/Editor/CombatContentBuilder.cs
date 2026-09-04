@@ -3,8 +3,11 @@ using BloodAndGlory.Combat.Runtime.Debug;
 using BloodAndGlory.Combat.Runtime.Enemy;
 using BloodAndGlory.Combat.Runtime.Training;
 using BloodAndGlory.Combat.Runtime.Weapons;
+using BloodAndGlory.Combat.Core;
+using System.Linq;
 using Unity.AI.Navigation;
 using UnityEditor;
+using UnityEditor.Animations;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.AI;
@@ -15,18 +18,39 @@ namespace BloodAndGlory.Combat.Editor
 {
     public static class CombatContentBuilder
     {
-        private const string Root = "Assets/BloodAndGlory/CombatContent";
+        private const string Root = "Assets/_BloodAndGlory/CombatContent";
         private const string TrainingScenePath = Root + "/Scenes/CombatTrainingScene.unity";
-        private const string SourceBroadswordPath = "Assets/SyntyStudios/PolygonKnights/Prefabs/Weapons/SM_Wep_Broadsword_01.prefab";
-        private const string SourcePeasantPath = "Assets/SyntyStudios/PolygonAdventure/Prefabs/Characters/Character_Peasant_Brown.prefab";
-        private const string SourcePeasantAnimatorControllerPath = "Assets/SyntyStudios/PolygonAdventure/Models/Characters/Character.controller";
+        private const string SourceBroadswordPath = "Assets/_Models/SyntyStudios/PolygonKnights/Prefabs/Weapons/SM_Wep_Broadsword_01.prefab";
+        private const string SourcePeasantPath = "Assets/_Models/SyntyStudios/PolygonAdventure/Prefabs/Characters/Character_Peasant_Brown.prefab";
         private const string SourceXrOriginPath = Root + "/XR Combat Rig.prefab";
+        private const string SourceXrDeviceSimulatorPath = "Assets/Samples/XR Interaction Toolkit/3.4.1/XR Device Simulator/XR Device Simulator.prefab";
         private const string CombatBroadswordPath = Root + "/Prefabs/Weapons/Broadsword_Combat.prefab";
         private const string CombatPeasantPath = Root + "/Prefabs/Enemies/PeasantBrown_Combat.prefab";
+        private const string PeasantCombatControllerPath = Root + "/Animation/PeasantCombat.controller";
         private const string BroadswordProfilePath = Root + "/Profiles/BroadswordProfile.asset";
         private const string PeasantProfilePath = Root + "/Profiles/PeasantWeakProfile.asset";
         private const string PeasantAttackPath = Root + "/Attacks/Peasant_Broadsword_Attack_01.asset";
         private const string PendingSceneWireKey = "BloodAndGlory.Combat.PendingTrainingSceneAssetReferenceWire";
+        private const string TrainingFloorName = "Training Floor";
+        private const string DirectionalLightName = "Directional Light";
+        private const string PlayerSpawnName = "Player Spawn";
+        private const string EnemySpawnName = "Enemy Spawn";
+        private const string XrCombatRigName = "XR Combat Rig";
+        private const string XrDeviceSimulatorName = "XR Device Simulator";
+        private const string PlayerBroadswordName = "Player Broadsword";
+        private const string PeasantName = "PeasantBrown_Combat";
+        private const string CombatDebugOverlayName = "Combat Debug Overlay";
+        private const string CombatDebugTextName = "Combat Debug Text";
+        private const string CombatTrainingRuntimeName = "Combat Training Runtime";
+        private const string PeasantIdleClipPath = "Assets/_Animations/Kevin Iglesias/Human Animations/Animations/Male/Combat/1H/HumanM@CombatIdle1H01.fbx";
+        private const string PeasantWalkClipPath = "Assets/_Animations/Kevin Iglesias/Human Animations/Animations/Male/Movement/Walk/HumanM@Walk01_Forward.fbx";
+        private const string PeasantAttackClipPath = "Assets/_Animations/Kevin Iglesias/Human Animations/Animations/Male/Combat/1H/HumanM@Attack1H01_R.fbx";
+        private const string PeasantBlockClipPath = "Assets/_Animations/Sword Animation/Assets/Animations/anim_block_idle.FBX";
+        private const string PeasantDeathClipPath = "Assets/_Animations/Kevin Iglesias/Human Animations/Animations/Male/Combat/HumanM@Death01.fbx";
+        private const string LegacyPeasantIdleClipPath = "Assets/_Animations/DoubleL/One Hand Up/Movement/Idle/Idle/OneHand_Up_Stand_Idle_A_2.fbx";
+        private const string LegacyPeasantWalkClipPath = "Assets/_Animations/DoubleL/One Hand Up/Movement/Walk/Base/InPlace/OneHand_Up_Walk_F_InPlace.fbx";
+        private const string LegacyPeasantAttackClipPath = "Assets/_Animations/DoubleL/One Hand Up/Attack_A/OneHand_Up_Attack_1_InPlace.fbx";
+        private const string LegacyPeasantBlockClipPath = "Assets/_Animations/DoubleL/One Hand Up/Sheild/Idle/OneHand_Up_Shield_Block_Idle.fbx";
 
         [InitializeOnLoadMethod]
         private static void RegisterPendingSceneWire()
@@ -45,7 +69,8 @@ namespace BloodAndGlory.Combat.Editor
             var material = CreateTrainingMaterial();
 
             AssetDatabase.SaveAssets();
-            CreateCombatPrefabs(enemyProfile, attack);
+            var peasantController = CreatePeasantCombatAnimatorController();
+            CreateCombatPrefabs(enemyProfile, attack, peasantController);
             CreateTrainingScene(material, enemyProfile, attack, weaponProfile);
             AssetDatabase.SaveAssets();
             QueueSavedTrainingSceneAssetReferenceWire();
@@ -54,12 +79,13 @@ namespace BloodAndGlory.Combat.Editor
 
         private static void EnsureFolders()
         {
-            CreateFolder("Assets", "BloodAndGlory");
-            CreateFolder("Assets/BloodAndGlory", "CombatContent");
+            CreateFolder("Assets", "_BloodAndGlory");
+            CreateFolder("Assets/_BloodAndGlory", "CombatContent");
             CreateFolder(Root, "Scenes");
             CreateFolder(Root, "Prefabs");
             CreateFolder(Root + "/Prefabs", "Weapons");
             CreateFolder(Root + "/Prefabs", "Enemies");
+            CreateFolder(Root, "Animation");
             CreateFolder(Root, "Profiles");
             CreateFolder(Root, "Attacks");
             CreateFolder(Root, "Materials");
@@ -97,10 +123,161 @@ namespace BloodAndGlory.Combat.Editor
             return material;
         }
 
-        private static void CreateCombatPrefabs(EnemyProfileAsset enemyProfile, AttackDefinitionAsset attack)
+        private static AnimatorController CreatePeasantCombatAnimatorController()
+        {
+            var controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(PeasantCombatControllerPath);
+            if (controller == null)
+                controller = AnimatorController.CreateAnimatorControllerAtPath(PeasantCombatControllerPath);
+
+            EnsureAnimatorParameter(controller, "Speed", AnimatorControllerParameterType.Float);
+            EnsureAnimatorParameter(controller, "CombatState", AnimatorControllerParameterType.Int);
+            EnsureAnimatorParameter(controller, "Dead", AnimatorControllerParameterType.Bool);
+
+            var stateMachine = controller.layers[0].stateMachine;
+
+            var idle = GetOrCreateState(stateMachine, "Idle");
+            EnsureStateMotion(idle, PeasantIdleClipPath, LegacyPeasantIdleClipPath);
+            stateMachine.defaultState = idle;
+
+            var walk = GetOrCreateState(stateMachine, "Approach");
+            EnsureStateMotion(walk, PeasantWalkClipPath, LegacyPeasantWalkClipPath);
+
+            var attack = GetOrCreateState(stateMachine, "Attack");
+            EnsureStateMotion(attack, PeasantAttackClipPath, LegacyPeasantAttackClipPath);
+
+            var defend = GetOrCreateState(stateMachine, "Defend");
+            EnsureStateMotion(defend, PeasantBlockClipPath, LegacyPeasantBlockClipPath);
+
+            var dead = GetOrCreateState(stateMachine, "Dead");
+            EnsureStateMotion(dead, PeasantDeathClipPath, LegacyPeasantIdleClipPath);
+
+            ClearTransitions(idle, walk, attack, defend, dead);
+            ClearAnyStateTransitions(stateMachine);
+            AddTransition(idle, walk, "Speed", AnimatorConditionMode.Greater, 0.05f);
+            AddTransition(walk, idle, "Speed", AnimatorConditionMode.Less, 0.05f);
+            AddCombatStateTransition(idle, attack, EnemyCombatState.AttackCommit);
+            AddCombatStateTransition(walk, attack, EnemyCombatState.AttackCommit);
+            AddCombatStateTransition(idle, defend, EnemyCombatState.Block);
+            AddCombatStateTransition(walk, defend, EnemyCombatState.Block);
+            AddCombatStateTransition(idle, defend, EnemyCombatState.Parry);
+            AddCombatStateTransition(walk, defend, EnemyCombatState.Parry);
+            AddCombatStateTransition(attack, idle, EnemyCombatState.Recover);
+            AddCombatStateTransition(attack, idle, EnemyCombatState.Idle);
+            AddCombatStateTransition(defend, idle, EnemyCombatState.Recover);
+            AddCombatStateTransition(defend, idle, EnemyCombatState.Idle);
+
+            var deadTransition = stateMachine.AddAnyStateTransition(dead);
+            deadTransition.hasExitTime = false;
+            deadTransition.duration = 0.1f;
+            deadTransition.AddCondition(AnimatorConditionMode.If, 0f, "Dead");
+
+            AssetDatabase.SaveAssets();
+            return controller;
+        }
+
+        private static void EnsureAnimatorParameter(
+            AnimatorController controller,
+            string parameterName,
+            AnimatorControllerParameterType parameterType)
+        {
+            var existing = controller.parameters.FirstOrDefault(parameter => parameter.name == parameterName);
+            if (existing != null && existing.type == parameterType)
+                return;
+
+            if (existing != null)
+                controller.RemoveParameter(existing);
+
+            controller.AddParameter(parameterName, parameterType);
+        }
+
+        private static AnimatorState GetOrCreateState(AnimatorStateMachine stateMachine, string stateName)
+        {
+            var existing = stateMachine.states
+                .Select(childState => childState.state)
+                .FirstOrDefault(state => state.name == stateName);
+
+            return existing != null ? existing : stateMachine.AddState(stateName);
+        }
+
+        private static void EnsureStateMotion(
+            AnimatorState state,
+            string fallbackClipPath,
+            params string[] replaceableClipPaths)
+        {
+            if (state.motion == null || replaceableClipPaths.Contains(AssetDatabase.GetAssetPath(state.motion)))
+                state.motion = LoadAnimationClip(fallbackClipPath);
+        }
+
+        private static void ClearTransitions(params AnimatorState[] states)
+        {
+            foreach (var state in states)
+            {
+                foreach (var transition in state.transitions.ToArray())
+                    state.RemoveTransition(transition);
+            }
+        }
+
+        private static void ClearAnyStateTransitions(AnimatorStateMachine stateMachine)
+        {
+            foreach (var transition in stateMachine.anyStateTransitions.ToArray())
+                stateMachine.RemoveAnyStateTransition(transition);
+        }
+
+        private static AnimationClip LoadAnimationClip(string path)
+        {
+            var clip = AssetDatabase.LoadAllAssetsAtPath(path)
+                .OfType<AnimationClip>()
+                .FirstOrDefault(candidate => !candidate.name.StartsWith("__preview__"));
+
+            if (clip == null)
+                throw new System.IO.FileNotFoundException("Animation clip missing.", path);
+
+            return clip;
+        }
+
+        private static void AddTransition(
+            AnimatorState from,
+            AnimatorState to,
+            string parameter,
+            AnimatorConditionMode mode,
+            float threshold)
+        {
+            var transition = from.AddTransition(to);
+            transition.hasExitTime = false;
+            transition.duration = 0.15f;
+            transition.AddCondition(mode, threshold, parameter);
+        }
+
+        private static void AddCombatStateTransition(AnimatorState from, AnimatorState to, EnemyCombatState combatState)
+        {
+            var transition = from.AddTransition(to);
+            transition.hasExitTime = false;
+            transition.duration = 0.1f;
+            transition.AddCondition(AnimatorConditionMode.Equals, (int)combatState, "CombatState");
+        }
+
+#if UNITY_INCLUDE_TESTS
+        public static GameObject GetOrCreateRootSceneObjectForTests(string objectName)
+        {
+            return GetOrCreateRootSceneObject(objectName, () => new GameObject(objectName));
+        }
+
+        public static GameObject GetOrCreateChildSceneObjectForTests(
+            Transform parent,
+            string objectName,
+            out bool created)
+        {
+            return GetOrCreateChildSceneObject(parent, objectName, out created);
+        }
+#endif
+
+        private static void CreateCombatPrefabs(
+            EnemyProfileAsset enemyProfile,
+            AttackDefinitionAsset attack,
+            RuntimeAnimatorController peasantController)
         {
             CreateBroadswordPrefab();
-            CreatePeasantPrefab(enemyProfile, attack);
+            CreatePeasantPrefab(enemyProfile, attack, peasantController);
         }
 
         private static void CreateBroadswordPrefab()
@@ -181,7 +358,10 @@ namespace BloodAndGlory.Combat.Editor
             return null;
         }
 
-        private static void CreatePeasantPrefab(EnemyProfileAsset enemyProfile, AttackDefinitionAsset attack)
+        private static void CreatePeasantPrefab(
+            EnemyProfileAsset enemyProfile,
+            AttackDefinitionAsset attack,
+            RuntimeAnimatorController peasantController)
         {
             var source = AssetDatabase.LoadAssetAtPath<GameObject>(SourcePeasantPath);
             if (source == null)
@@ -194,21 +374,21 @@ namespace BloodAndGlory.Combat.Editor
             if (animator != null)
             {
                 animator.applyRootMotion = false;
-                if (animator.runtimeAnimatorController == null)
-                {
-                    var controller = AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(SourcePeasantAnimatorControllerPath);
-                    if (controller != null)
-                        animator.runtimeAnimatorController = controller;
-                }
+                animator.runtimeAnimatorController = peasantController;
             }
+
+            LiftRendererBoundsToRoot(instance);
 
             var combatant = instance.GetComponent<CombatantAuthoring>();
             if (combatant == null)
                 combatant = instance.AddComponent<CombatantAuthoring>();
             combatant.ConfigureForTests(10, isPlayer: false, maxHitPoints: 100);
 
-            if (instance.GetComponent<NavMeshAgent>() == null)
-                instance.AddComponent<NavMeshAgent>();
+            var agent = instance.GetComponent<NavMeshAgent>();
+            if (agent == null)
+                agent = instance.AddComponent<NavMeshAgent>();
+
+            ConfigureAgentFromRendererBounds(instance, agent);
 
             var enemyController = instance.GetComponent<EnemyCombatController>();
             if (enemyController == null)
@@ -233,6 +413,43 @@ namespace BloodAndGlory.Combat.Editor
             Object.DestroyImmediate(instance);
         }
 
+        private static void LiftRendererBoundsToRoot(GameObject root)
+        {
+            if (!TryCalculateRendererBounds(root, out var bounds) || bounds.min.y >= 0f)
+                return;
+
+            var lift = -bounds.min.y;
+            foreach (Transform child in root.transform)
+                child.localPosition += Vector3.up * lift;
+        }
+
+        private static void ConfigureAgentFromRendererBounds(GameObject root, NavMeshAgent agent)
+        {
+            if (!TryCalculateRendererBounds(root, out var bounds))
+                return;
+
+            var height = Mathf.Max(1.8f, bounds.size.y);
+            agent.height = height;
+            agent.baseOffset = height * 0.5f;
+            agent.radius = 0.35f;
+        }
+
+        private static bool TryCalculateRendererBounds(GameObject root, out Bounds bounds)
+        {
+            var renderers = root.GetComponentsInChildren<Renderer>(includeInactive: true);
+            if (renderers.Length == 0)
+            {
+                bounds = default;
+                return false;
+            }
+
+            bounds = renderers[0].bounds;
+            foreach (var renderer in renderers.Skip(1))
+                bounds.Encapsulate(renderer.bounds);
+
+            return true;
+        }
+
         private static Transform CreateMarker(Transform parent, string name, Vector3 localPosition)
         {
             var marker = new GameObject(name).transform;
@@ -247,42 +464,51 @@ namespace BloodAndGlory.Combat.Editor
             AttackDefinitionAsset attack,
             WeaponProfileAsset weaponProfile)
         {
-            var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            var scene = OpenOrCreateTrainingScene();
 
-            var floor = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            floor.name = "Training Floor";
+            var floor = GetOrCreateRootSceneObject(TrainingFloorName, () => GameObject.CreatePrimitive(PrimitiveType.Cube));
             floor.transform.localScale = new Vector3(12f, 0.1f, 12f);
-            floor.GetComponent<MeshRenderer>().sharedMaterial = material;
-            floor.AddComponent<NavMeshSurface>();
+            var floorRenderer = floor.GetComponent<MeshRenderer>();
+            if (floorRenderer != null)
+                floorRenderer.sharedMaterial = material;
+            EnsureComponent<NavMeshSurface>(floor);
 
-            var lightObject = new GameObject("Directional Light");
-            var light = lightObject.AddComponent<Light>();
+            var lightObject = GetOrCreateRootSceneObject(DirectionalLightName, () => new GameObject(DirectionalLightName));
+            var light = EnsureComponent<Light>(lightObject);
             light.type = LightType.Directional;
             light.intensity = 1.0f;
             lightObject.transform.rotation = Quaternion.Euler(50f, -30f, 0f);
 
-            var playerSpawn = new GameObject("Player Spawn");
+            var playerSpawn = GetOrCreateRootSceneObject(PlayerSpawnName, () => new GameObject(PlayerSpawnName));
             playerSpawn.transform.position = new Vector3(0f, 0.1f, -3f);
             var enemyTarget = playerSpawn.transform;
 
-            var enemySpawn = new GameObject("Enemy Spawn");
+            var enemySpawn = GetOrCreateRootSceneObject(EnemySpawnName, () => new GameObject(EnemySpawnName));
             enemySpawn.transform.position = new Vector3(0f, 0.1f, 2f);
 
+            var xrOrigin = GameObject.Find(XrCombatRigName);
             var xrOriginSource = AssetDatabase.LoadAssetAtPath<GameObject>(SourceXrOriginPath);
-            if (xrOriginSource != null)
+            if (xrOrigin == null && xrOriginSource != null)
             {
-                var xrOrigin = (GameObject)PrefabUtility.InstantiatePrefab(xrOriginSource);
-                xrOrigin.name = "XR Combat Rig";
+                xrOrigin = (GameObject)PrefabUtility.InstantiatePrefab(xrOriginSource);
+                xrOrigin.name = XrCombatRigName;
+            }
+
+            if (xrOrigin != null)
+            {
                 xrOrigin.transform.position = playerSpawn.transform.position;
                 enemyTarget = xrOrigin.transform;
             }
 
+            EnsureXrDeviceSimulator();
+
+            DestroySceneObjectIfExists(PlayerBroadswordName);
             WeaponSweepDriver sweep = null;
             var weaponSource = AssetDatabase.LoadAssetAtPath<GameObject>(CombatBroadswordPath);
             if (weaponSource != null)
             {
                 var weapon = (GameObject)PrefabUtility.InstantiatePrefab(weaponSource);
-                weapon.name = "Player Broadsword";
+                weapon.name = PlayerBroadswordName;
                 weapon.transform.position = new Vector3(0.6f, 0.9f, -2.2f);
                 sweep = weapon.GetComponent<WeaponSweepDriver>();
                 var serializedSweep = new SerializedObject(sweep);
@@ -291,13 +517,14 @@ namespace BloodAndGlory.Combat.Editor
                 serializedSweep.ApplyModifiedPropertiesWithoutUndo();
             }
 
+            DestroySceneObjectIfExists(PeasantName);
             GameObject enemy = null;
             EnemyCombatController enemyController = null;
             var enemySource = AssetDatabase.LoadAssetAtPath<GameObject>(CombatPeasantPath);
             if (enemySource != null)
             {
                 enemy = (GameObject)PrefabUtility.InstantiatePrefab(enemySource);
-                enemy.name = "PeasantBrown_Combat";
+                enemy.name = PeasantName;
                 enemy.transform.position = enemySpawn.transform.position;
                 enemyController = enemy.GetComponent<EnemyCombatController>();
                 var serializedEnemy = new SerializedObject(enemyController);
@@ -305,15 +532,17 @@ namespace BloodAndGlory.Combat.Editor
                 PrefabUtility.RecordPrefabInstancePropertyModifications(enemyController);
             }
 
-            var debug = new GameObject("Combat Debug Overlay");
-            var overlay = debug.AddComponent<CombatDebugOverlay>();
-            var textObject = new GameObject("Combat Debug Text");
-            textObject.transform.SetParent(debug.transform, false);
-            textObject.transform.localPosition = new Vector3(-2.2f, 1.8f, 1.6f);
-            textObject.transform.localRotation = Quaternion.Euler(0f, 35f, 0f);
-            textObject.transform.localScale = Vector3.one * 0.08f;
+            var debug = GetOrCreateRootSceneObject(CombatDebugOverlayName, () => new GameObject(CombatDebugOverlayName));
+            var overlay = EnsureComponent<CombatDebugOverlay>(debug);
+            var textObject = GetOrCreateChildSceneObject(debug.transform, CombatDebugTextName, out var textCreated);
+            if (textCreated)
+            {
+                textObject.transform.localPosition = new Vector3(-2.2f, 1.8f, 1.6f);
+                textObject.transform.localRotation = Quaternion.Euler(0f, 35f, 0f);
+                textObject.transform.localScale = Vector3.one * 0.08f;
+            }
 
-            var textMesh = textObject.AddComponent<TextMesh>();
+            var textMesh = EnsureComponent<TextMesh>(textObject);
             textMesh.anchor = TextAnchor.UpperLeft;
             textMesh.alignment = TextAlignment.Left;
             textMesh.fontSize = 42;
@@ -323,8 +552,9 @@ namespace BloodAndGlory.Combat.Editor
             AssignObjectReference(serializedOverlay, "enemy", enemyController);
             AssignObjectReference(serializedOverlay, "worldText", textMesh);
 
-            var runtime = new GameObject("Combat Training Runtime");
-            var trainingRuntime = runtime.AddComponent<CombatTrainingRuntime>();
+            DestroySceneObjectIfExists(CombatTrainingRuntimeName);
+            var runtime = new GameObject(CombatTrainingRuntimeName);
+            var trainingRuntime = EnsureComponent<CombatTrainingRuntime>(runtime);
             var serializedRuntime = new SerializedObject(trainingRuntime);
             AssignObjectReference(serializedRuntime, "playerSword", sweep);
             AssignObjectReference(serializedRuntime, "playerSwordProfile", weaponProfile);
@@ -335,6 +565,68 @@ namespace BloodAndGlory.Combat.Editor
             EditorSceneManager.SaveScene(scene, TrainingScenePath);
             WireSavedTrainingSceneAssetReferences();
             AddTrainingSceneToBuildSettings();
+        }
+
+        private static Scene OpenOrCreateTrainingScene()
+        {
+            return System.IO.File.Exists(TrainingScenePath)
+                ? EditorSceneManager.OpenScene(TrainingScenePath, OpenSceneMode.Single)
+                : EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+        }
+
+        private static void EnsureXrDeviceSimulator()
+        {
+            if (GameObject.Find(XrDeviceSimulatorName) != null)
+                return;
+
+            var simulatorSource = AssetDatabase.LoadAssetAtPath<GameObject>(SourceXrDeviceSimulatorPath);
+            if (simulatorSource == null)
+                return;
+
+            var simulator = (GameObject)PrefabUtility.InstantiatePrefab(simulatorSource);
+            simulator.name = XrDeviceSimulatorName;
+        }
+
+        private static GameObject GetOrCreateRootSceneObject(string objectName, System.Func<GameObject> create)
+        {
+            var existing = GameObject.Find(objectName);
+            if (existing != null)
+                return existing;
+
+            var created = create();
+            created.name = objectName;
+            return created;
+        }
+
+        private static GameObject GetOrCreateChildSceneObject(
+            Transform parent,
+            string objectName,
+            out bool created)
+        {
+            var existing = parent.Find(objectName);
+            if (existing != null)
+            {
+                created = false;
+                return existing.gameObject;
+            }
+
+            var child = new GameObject(objectName);
+            child.transform.SetParent(parent, false);
+            created = true;
+            return child;
+        }
+
+        private static T EnsureComponent<T>(GameObject gameObject) where T : Component
+        {
+            var component = gameObject.GetComponent<T>();
+            return component != null ? component : gameObject.AddComponent<T>();
+        }
+
+        private static void DestroySceneObjectIfExists(string objectName)
+        {
+            var existing = GameObject.Find(objectName);
+            if (existing != null)
+                Object.DestroyImmediate(existing);
         }
 
         private static void WireSavedTrainingSceneAssetReferences()

@@ -1,5 +1,6 @@
 using BloodAndGlory.Combat.Core;
 using BloodAndGlory.Combat.Runtime.Authoring;
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -9,6 +10,9 @@ namespace BloodAndGlory.Combat.Runtime.Enemy
     public sealed class EnemyCombatController : MonoBehaviour
     {
         private const string PlayerSpawnTargetName = "Player Spawn";
+        private const string XrDeviceSimulatorObjectName = "XR Device Simulator";
+        private const string XrDeviceSimulatorTypeName = "UnityEngine.XR.Interaction.Toolkit.Inputs.Simulation.XRDeviceSimulator";
+        private const float XrDeviceSimulatorCheckIntervalSeconds = 0.5f;
 
         [SerializeField] private Transform target;
         [SerializeField] private EnemyProfileAsset enemyProfile;
@@ -24,6 +28,8 @@ namespace BloodAndGlory.Combat.Runtime.Enemy
         private float stateEnteredAt;
         private bool attackProposalSent;
         private string movementMode = "None";
+        private static bool cachedXrDeviceSimulatorActive;
+        private static float nextXrDeviceSimulatorCheckAt;
 
         public EnemyCombatState State => state;
         public bool IsAttackActive => state == EnemyCombatState.AttackCommit;
@@ -58,7 +64,7 @@ namespace BloodAndGlory.Combat.Runtime.Enemy
 
             var profile = enemyProfile.ToData();
             DistanceToTarget = HorizontalDistance(transform.position, currentTarget.position);
-            var next = decisionService.Decide(state, profile, DistanceToTarget, Time.time - stateEnteredAt, Random.value);
+            var next = decisionService.Decide(state, profile, DistanceToTarget, Time.time - stateEnteredAt, UnityEngine.Random.value);
             if (next != state)
                 EnterState(next);
 
@@ -204,7 +210,7 @@ namespace BloodAndGlory.Combat.Runtime.Enemy
             if (mainCamera != null)
                 return mainCamera;
 
-            return Object.FindFirstObjectByType<Camera>();
+            return UnityEngine.Object.FindFirstObjectByType<Camera>();
         }
 
         private static bool ShouldPreferRuntimeCameraTarget(Transform assignedTarget, Camera runtimeCamera)
@@ -212,7 +218,46 @@ namespace BloodAndGlory.Combat.Runtime.Enemy
             if (runtimeCamera == null)
                 return false;
 
-            return assignedTarget == null || assignedTarget.name == PlayerSpawnTargetName;
+            return assignedTarget == null ||
+                assignedTarget.name == PlayerSpawnTargetName ||
+                IsXrDeviceSimulatorActive();
+        }
+
+        private static bool IsXrDeviceSimulatorActive()
+        {
+            if (Application.isPlaying && Time.unscaledTime < nextXrDeviceSimulatorCheckAt)
+                return cachedXrDeviceSimulatorActive;
+
+            cachedXrDeviceSimulatorActive = FindActiveXrDeviceSimulator();
+            nextXrDeviceSimulatorCheckAt = Application.isPlaying
+                ? Time.unscaledTime + XrDeviceSimulatorCheckIntervalSeconds
+                : 0f;
+
+            return cachedXrDeviceSimulatorActive;
+        }
+
+        private static bool FindActiveXrDeviceSimulator()
+        {
+            var namedSimulator = GameObject.Find(XrDeviceSimulatorObjectName);
+            if (namedSimulator != null && namedSimulator.activeInHierarchy)
+                return true;
+
+            var behaviours = UnityEngine.Object.FindObjectsByType<MonoBehaviour>(
+                FindObjectsInactive.Exclude,
+                FindObjectsSortMode.None);
+
+            foreach (var behaviour in behaviours)
+            {
+                if (behaviour == null)
+                    continue;
+
+                var type = behaviour.GetType();
+                if (string.Equals(type.FullName, XrDeviceSimulatorTypeName, StringComparison.Ordinal) ||
+                    string.Equals(type.Name, "XRDeviceSimulator", StringComparison.Ordinal))
+                    return true;
+            }
+
+            return false;
         }
 
         private static float HorizontalDistance(Vector3 a, Vector3 b)

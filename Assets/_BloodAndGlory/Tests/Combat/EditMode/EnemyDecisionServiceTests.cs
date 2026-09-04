@@ -124,5 +124,27 @@ namespace BloodAndGlory.Combat.Tests.EditMode
                 Object.DestroyImmediate(spawn);
             }
         }
+
+        [Test]
+        public void ShouldPreferRuntimeCameraTargetForTests_UsesCameraWhenXrDeviceSimulatorIsActive()
+        {
+            var assignedTarget = new GameObject("XR Combat Rig");
+            var cameraObject = new GameObject("Main Camera");
+            var simulator = new GameObject("XR Device Simulator");
+            try
+            {
+                var runtimeCamera = cameraObject.AddComponent<Camera>();
+
+                var shouldPreferCamera = EnemyCombatController.ShouldPreferRuntimeCameraTargetForTests(assignedTarget.transform, runtimeCamera);
+
+                Assert.IsTrue(shouldPreferCamera);
+            }
+            finally
+            {
+                Object.DestroyImmediate(simulator);
+                Object.DestroyImmediate(cameraObject);
+                Object.DestroyImmediate(assignedTarget);
+            }
+        }
     }
 }
